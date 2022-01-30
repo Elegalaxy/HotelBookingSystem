@@ -1,0 +1,18 @@
+Hotel management system
+
+CRUD: Rooms, Customer, Booking
+
+Customer:
+    - Name, Contact, Room, Booking
+
+Room:
+    - Room type, Bed type, cost per night, Room number
+
+Payment:
+    - Type, number, cvc, expire month & year
+
+Billing:
+    - Payment, Name, Amount
+
+Booking:
+    - Customer, Room, Billing
