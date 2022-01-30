@@ -3,7 +3,7 @@ Hotel management system
 CRUD: Rooms, Customer, Booking
 
 Customer:
-    - Name, Contact, Room, Booking
+    - Name, Contact, ic, Booking
 
 Room:
     - Room type, Bed type, cost per night, Room number

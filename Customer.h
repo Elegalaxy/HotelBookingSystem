@@ -10,6 +10,7 @@ class Customer{
 
     public:
         Customer();
+        // Customer(std::string n, std::string c, std::string i): name{n}, contact{c}, ic{i} {};
         Customer(std::string n, std::string c, std::string i, Booking* b): name{n}, contact{c}, ic{i}, booking{b} {};
 
 };

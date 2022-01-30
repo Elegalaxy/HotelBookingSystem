@@ -7,6 +7,6 @@ Booking::Booking(){
     ++id;
 }
 
-Booking(Room* r, Billing* b, vector<Customer*> c){
+Booking::Booking(Room* r, Billing* b, vector<Customer*> c){
     ++id;
 }
