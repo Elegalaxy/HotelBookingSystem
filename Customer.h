@@ -13,6 +13,9 @@ class Customer{
         // Customer(std::string n, std::string c, std::string i): name{n}, contact{c}, ic{i} {};
         Customer(std::string n, std::string c, std::string i, Booking* b): name{n}, contact{c}, ic{i}, booking{b} {};
 
+        std::string get_str(std::string type);
+        void set_str(std::string type, std::string data);
+
 };
 
 #endif
