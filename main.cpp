@@ -109,12 +109,13 @@ void create_room(map<int, Room*> &rooms){
     rooms[room_number] = new Room(room_number, room_type, cost, bed_type);
 }
 
-Room* search_room(map<int, Room*> &rooms){
-    int data;
+Room* search_room(map<int, Room*> &rooms, int data = -1){
     Room* cur;
 
-    cout << "Enter room number: ";
-    cin >> data;
+    if(data == -1){
+        cout << "Enter room number: ";
+        cin >> data;
+    }
 
     auto res = rooms.find(data);
 
@@ -245,8 +246,8 @@ void customer_menu(map<string, Customer*> &customers){
 
 }
 
-void create_cust(map<string, Customer*> &customers, Booking* booking = nullptr){
-    string name = "", contact = "", ic = "", book;
+Customer* create_cust(map<string, Customer*> &customers, Booking* booking = nullptr){
+    string name = "", contact = "", ic = "";
 
     cout << "Enter customer's name: ";
     cin >> name;
@@ -254,27 +255,10 @@ void create_cust(map<string, Customer*> &customers, Booking* booking = nullptr){
     cin >> contact;
     cout << "Enter customer's ic: ";
     cin >> ic;
-    cout << "Does this customer have a booking?(y/n): ";
-    cin >> book;
 
-    if(book == "y" || book == "Y"){
-        int book_id = 0;
-        pair<bool, Booking*> cus_book; // Bool to check if cancel searching
-
-        cout << "Enter booking number: ";
-        cin >> book_id;
-        
-
-        do{
-            cus_book = search_book(book_id);
-
-            if(!cus_book.first) return;
-        }while(cus_book.second == nullptr);
-
-        booking = cus_book.second;
-    }
-
-    customers[ic] = new Customer(name, contact, ic, booking);
+    Customer* cur = new Customer(name, contact, ic, booking);
+    customers[ic] = cur;
+    return cur;
 }
 
 Customer* search_cust(map<string, Customer*> &customers){
@@ -384,8 +368,105 @@ void delete_cust(map<string, Customer*> &customers){
 }
 
 // Bookings
-void book_menu(map<int, Booking*> &bookings){
+void book_menu(map<int, Booking*> &bookings, map<int, Room*> &rooms, map<string, Customer*> &customers){
+    int choice = 1;
 
+    while(choice){
+        cout << "Create Booking(1)" << endl;
+        cout << "View Booking(2)" << endl;
+        cout << "Edit Booking(3)" << endl;
+        cout << "Delete Booking(4)" << endl;
+        cout << "Return(0)" << endl;
+        cin >> choice;
+
+        switch(choice){
+            case 1:
+                create_book(bookings, rooms, customers);
+                break;
+            case 2:
+                view_book(bookings);
+                break;
+            case 3:
+                edit_book(bookings);
+                break;
+            case 4:
+                delete_book(bookings);
+                break;
+            case 0:
+                return;
+            default:
+                cout << "Invalid input!" << endl;
+        }
+    }
+
+}
+
+void create_book(map<int, Booking*> &bookings, map<int, Room*> &rooms, map<string, Customer*> &customers){
+    Room* cur_room;
+    Billing* cur_bill;
+    vector<Customer*> cur_cust;
+
+    int room_num;
+    int choice = -1;
+
+    do{
+        cout << "Choose room(1)" << endl;
+        cout << "Add exist customer(2)" << endl;
+        cout << "Add new customer(3)" << endl;
+        cout << "Finish booking(4)" << endl;
+        cout << "Cancel booking(0)" << endl;
+        cin >> choice;
+
+        switch(choice){
+            case 1:
+                view_room(rooms);
+                while(!cur_room){
+                    cout << "Enter room number: " << endl;
+                    cin >> room_num;
+                    cur_room = search_room(rooms, room_num);
+                }
+                break;
+            case 2:
+                Customer* res = search_cust(customers);
+                if(res)
+                    cur_cust.push_back(res);
+                break;
+            case 3:
+                cur_cust.push_back(create_cust(customers));
+                break;
+            case 4:
+                Booking* cur_book = new Booking(cur_room, cur_bill, cur_cust);
+                bookings[cur_book->get_id()] = cur_book;
+                for(int i = 0; i < cur_cust.size(); i++){
+                    cur_cust[i]->set_book(cur_book);
+                }
+                break;
+            case 0:
+                return;
+            default:
+                cout << "Invalid Input!" << endl;
+        }
+
+    }while(choice != 4);
+    
+}
+
+Booking* search_book(map<int, Booking*> &bookings, int data = -1){
+    Booking* cur;
+
+    if(data == -1){
+        cout << "Enter booking id: ";
+        cin >> data;
+    }
+
+    auto res = bookings.find(data);
+
+    if(res != bookings.end())
+        cur = res->second;
+    else
+        cout << "Booking not found!" << endl;
+
+    return cur;
 }
 
 
@@ -402,7 +483,7 @@ void menu(map<int, Room*> &rooms, map<string, Customer*> &customers, map<int, Bo
 
         switch(choice){
             case 1:
-                book_menu(bookings);
+                book_menu(bookings, rooms, customers);
                 break;
             case 2:
                 customer_menu(customers);

@@ -27,3 +27,11 @@ void Customer::set_str(string type, string data){
         contact = data;
     
 }
+
+Booking* Customer::get_book(){
+    return booking;
+}
+
+void Customer::set_book(Booking* data){
+    booking = data;
+}
